@@ -1,5 +1,7 @@
 # nginx
 
+nginx 面试题
+
 nginx 编译安装
 nginx 信号量
 nginx 日志切割
