@@ -9,7 +9,7 @@ nginx 重定向
 nginx 反向代理
 nginx gzip
 nginx 设置缓存
-nginx 负载均衡
+nginx 负载均衡 限制访问量，漏桶算法
 nginx 路径匹配
 nginx https->http2  这里有很多优化的地方 暂时搞不清楚，以后再说
 nginx 配置优化 https://blog.csdn.net/u010391029/article/details/56666943                        
