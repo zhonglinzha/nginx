@@ -43,6 +43,47 @@ tar -zxvf nginx-1.8.0.tar.gz
 
 4、编译安装 执行
 
-make
+make -j4
 make install
 5、查看nginx所在位置，本文将配置指向了/usr/local/nginx目录
+
+
+./configure \
+--prefix=/Users/ex-zhazhonglin001/Desktop/ngs \
+--with-openssl=/Users/ex-zhazhonglin001/Desktop/nginx-1.16.0/openssl-1.0.2s \
+--with-http_ssl_module \
+--with-http_stub_status_module \
+--with-http_v2_module \
+--with-http_gzip_static_module
+
+make -j4
+
+make install
+
+
+ld: symbol(s) not found for architecture x86_64
+
+今天在mac os 上编译安装Nginx时候，报错：ld: symbol(s) not found for architecture x86_64， 经过一番折腾之后发现，由于Nginx依赖openssl库，查看openssl的./config 文件发现，这个问题应该是 openssl/config脚本猜对你的系统是64位，但是 会根据$KERNEL_BITS来判断是否开启x86_64编译，默认不开启，他会给你5秒时间确认是否停止编译，手动设置x86_64编译，所以默认你生成的openssl库文件是32位的，最后静态链接到nginx会出错。目前看来没有很好的方法把x86_64的参数传到openssl配置文件中 (openssl/config 猜测os架构，设置编译的参数是32位还是64位，默认是32位，然后调用openssl/Configure生成Makefile)，
+
+解决办法就是：
+
+先运行nginx源码目录下运行
+$ ./configure
+
+然后在objs里，打开Makefile，
+
+找到： ./config --prefix=xxx.openssl no-shared        (注释：XXX是已存在的openssl源码路径)
+
+把该段的 ./config 改成 ./Configure darwin64-x86_64-cc 其他后面参数不变，保存
+
+然后再make就编译通过了
+
+
+
+ps aux | grep nginx
+
+
+
+https://www.cnblogs.com/whych/p/9521597.html
+平滑升级  kill –USR2 旧版本的nginx主进程号
+         kill -QUIT旧版本的nginx主进程号
